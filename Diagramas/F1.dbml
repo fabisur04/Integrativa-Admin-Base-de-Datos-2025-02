@@ -18,16 +18,19 @@ Table Ciudad {
 }
 
 Table Cliente {
-  rut_cliente ncahr(15) [pk]  
-  nombre_cliente nchar(50)      [NOT NULL]
-  id_comuna tinyint             [NOT NULL]
-  direccion_cliente nchar(100)  [NOT NULL]
-  numero_telefono nchar(15)     
+  rut_cliente nchar(10) [pk]
+  nombre_cliente nchar(50) [not null]
+  id_comuna tinyint [not null]
+  direccion_cliente nchar(100) [not null]
 }
 
 Table Telefono {
-  numero_telefono varchar [pk]  
+  numero_telefono nchar(15) [pk]
+  rut_cliente nchar(10) [not null]
 }
+
+
+
 
 Table Categoria {
   id_categoria varchar [pk] 
@@ -71,5 +74,5 @@ Ref: Detalle_boleta.precio_venta > Producto.precio_producto
 Ref: Cliente.rut_cliente < Boleta.rut_cliente
 Ref: Cliente.id_comuna > Comuna.id_comuna
 Ref: Comuna.id_ciudad > Ciudad.id_ciudad
-Ref: Cliente.numero_telefono < Telefono.numero_telefono
+Ref: Telefono.rut_cliente > Cliente.rut_cliente
 Ref: Proveedor.id_comuna > Comuna.id_comuna
