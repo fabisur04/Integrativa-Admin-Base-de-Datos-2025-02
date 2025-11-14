@@ -6,3 +6,6 @@ Se les añadió Foreign keys a las siguientes tablas
  #Proveedor: id_comuna
  #Comuna: id_ciudad
  #Cliente: numero_telefono
+
+
+##Revisar relaciones entre tablas##
