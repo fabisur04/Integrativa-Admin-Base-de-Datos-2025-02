@@ -1,81 +1,88 @@
 Table Proveedor {
-  rut_proveedor varchar(10) [pk] 
+  rut_proveedor nchar(15) [pk]
   nombre_proveedor nchar(50)  [NOT NULL]
   id_comuna tinyint           [NOT NULL]
-  calle nchar(80)             [NOT NULL]
-  numero nchar(20)            [NOT NULL]
-  telefono nchar(15)          
-  web varchar
+  calle  nchar(50)            [NOT NULL]
+  numero nchar(25)            [not null]
+  web nchar(150)
+  codigo_postal int       [not null] 
+  /* #Agregar codigo postal
+  Justificación
+  Agrégalo en la tabla Proveedor o Cliente. 
+  Si necesitas precisión exacta (código postal
+  de 7 dígitos que varía por cuadra), 
+  debe ir directo en la tabla de la persona/empresa,
+  no en la comuna.
+  */
 }
 
 Table Comuna {
   id_comuna tinyint [pk] 
-  id_ciudad tinyint   [NOT NULL]
-  nombre_comuna varchar [NOT NULL]
+  id_ciudad tinyint     [NOT NULL]
+  nombre_comuna nchar(50) [NOT NULL]
 }
 
 Table Ciudad {
   id_ciudad tinyint [pk]
-  nombre_ciudad nchar(50)
+  nombre_ciudad nchar(50) [not null]
 }
 
 Table Cliente {
-  rut_cliente varchar(10) [pk] 
-  nombre_cliente nchar(50) [not null]
-  id_comuna tinyint [not null]
-  calle nchar(80)            [NOT NULL]
-  numero nchar(20)           [NOT NULL]
+  rut_cliente nchar(15) [pk]  
+  nombre_cliente nchar(50)      [NOT NULL]
+  id_comuna tinyint             [NOT NULL]
+  calle  nchar(50)              [NOT NULL]
+  numero nchar(25)              [not null]
+  codigo_postal int       [not null] 
 }
 
 Table Telefono {
-  rut_cliente varchar(10) [pk, not null] 
   numero_telefono nchar(15) [pk]
+  rut_cliente nchar(15) [not null] 
 }
 
 Table Categoria {
   id_categoria tinyint [pk] 
-  nombre_categoria varchar  [NOT NULL]
+  nombre_categoria nchar(50)  [NOT NULL]
 }
 
 Table Producto {
-  id_producto int [pk]
-  id_categoria tinyint     
-  nombre_producto varchar [NOT NULL]
+  id_producto int [pk]  
+  id_categoria tinyint       [not null]
+  nombre_producto nchar(100) [NOT NULL]
   precio_producto decimal [NOT NULL]
   stock_producto int      [NOT NULL]
 }
 
 Table Proveedor_Producto {
-  rut_proveedor varchar(10) [pk, NOT NULL] 
-  id_producto int [pk, NOT NULL]
-  ind_vigente boolean   [NOT NULL]
-  fecha_ultima_compra date
+  id_producto int       [NOT NULL]
+  rut_proveedor nchar(15) [NOT NULL]
+  ind_vigente bit   [NOT NULL]
+  fecha_ultima_compra date  [not null]
 }
 
 Table Detalle_boleta {
-  correlativo_detalle varchar [pk]
-  id_venta varchar      [NOT NULL]
-  id_producto int       [NOT NULL] 
-  precio_venta decimal  
+  correlativo_detalle bigint [pk]  
+  id_venta     bigint   [not NULL]
+  id_producto  int      [not null]
+  precio_venta decimal  [not null]
   cantidad_producto int [NOT NULL]
 }
 
 Table Boleta {
-  id_venta varchar [pk]
-  rut_cliente varchar(10) [not null] 
+  id_venta bigint [pk]
+  rut_cliente nchar(15)   [not null] 
   fecha_venta date        [NOT NULL]
   descuento_venta decimal [NOT NULL]
-  monto_final decimal     [NOT NULL] 
 }
-
 
 Ref: Proveedor_Producto.rut_proveedor > Proveedor.rut_proveedor
 Ref: Proveedor_Producto.id_producto > Producto.id_producto
 Ref: Producto.id_categoria > Categoria.id_categoria
 Ref: Boleta.id_venta < Detalle_boleta.id_venta
-Ref: Detalle_boleta.id_producto > Producto.id_producto 
 Ref: Cliente.rut_cliente < Boleta.rut_cliente
 Ref: Cliente.id_comuna > Comuna.id_comuna
 Ref: Comuna.id_ciudad > Ciudad.id_ciudad
-Ref: Telefono.rut_cliente > Cliente.rut_cliente
+Ref: Cliente.rut_cliente < Telefono.rut_cliente
 Ref: Proveedor.id_comuna > Comuna.id_comuna
+ref: Producto.id_producto < Detalle_boleta.id_producto
