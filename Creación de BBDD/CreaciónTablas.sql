@@ -1,11 +1,12 @@
 
-CREATE DATABASE IntegrativaBBDD;
+
+CREATE DATABASE IntegrativaAdminBBDD;
 GO
 
-USE IntegrativaBBDD;
+USE IntegrativaAdminBBDD;
 GO
 
-
+-- 1. Tablas de Ubicación
 CREATE TABLE Ciudad (
     id_ciudad TINYINT PRIMARY KEY,
     nombre_ciudad NCHAR(50) NOT NULL
@@ -17,35 +18,35 @@ CREATE TABLE Comuna (
     nombre_comuna VARCHAR(100) NOT NULL,
     CONSTRAINT FK_Comuna_Ciudad FOREIGN KEY (id_ciudad) REFERENCES Ciudad(id_ciudad)
 );
-GO
 
 CREATE TABLE Cliente (
-    rut_cliente VARCHAR(10) PRIMARY KEY,
+    rut_cliente NCHAR(10) PRIMARY KEY, 
     nombre_cliente NCHAR(50) NOT NULL,
     id_comuna TINYINT NOT NULL,
     calle NCHAR(80) NOT NULL,
     numero NCHAR(20) NOT NULL,
+    codigo_postal INT NOT NULL, 
     CONSTRAINT FK_Cliente_Comuna FOREIGN KEY (id_comuna) REFERENCES Comuna(id_comuna)
 );
 
 CREATE TABLE Telefono (
-    rut_cliente VARCHAR(10) NOT NULL,
+    rut_cliente NCHAR(10) NOT NULL,
     numero_telefono NCHAR(15) NOT NULL,
     CONSTRAINT PK_Telefono PRIMARY KEY (rut_cliente, numero_telefono),
     CONSTRAINT FK_Telefono_Cliente FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut_cliente)
 );
 
 CREATE TABLE Proveedor (
-    rut_proveedor VARCHAR(10) PRIMARY KEY,
+    rut_proveedor NCHAR(10) PRIMARY KEY,
     nombre_proveedor NCHAR(50) NOT NULL,
     id_comuna TINYINT NOT NULL,
     calle NCHAR(80) NOT NULL,
     numero NCHAR(20) NOT NULL,
     telefono NCHAR(15) NULL,
     web VARCHAR(255) NULL,
+    codigo_postal INT NOT NULL, 
     CONSTRAINT FK_Proveedor_Comuna FOREIGN KEY (id_comuna) REFERENCES Comuna(id_comuna)
 );
-GO
 
 CREATE TABLE Categoria (
     id_categoria TINYINT PRIMARY KEY,
@@ -62,10 +63,9 @@ CREATE TABLE Producto (
     CONSTRAINT CHK_Stock_Positivo CHECK (stock_producto >= 0),
     CONSTRAINT CHK_Precio_Positivo CHECK (precio_producto > 0)
 );
-GO
 
 CREATE TABLE Proveedor_Producto (
-    rut_proveedor VARCHAR(10) NOT NULL,
+    rut_proveedor NCHAR(10) NOT NULL, 
     id_producto INT NOT NULL,
     ind_vigente BIT NOT NULL DEFAULT 1,
     fecha_ultima_compra DATE NULL,
@@ -73,11 +73,11 @@ CREATE TABLE Proveedor_Producto (
     CONSTRAINT FK_ProvProd_Proveedor FOREIGN KEY (rut_proveedor) REFERENCES Proveedor(rut_proveedor),
     CONSTRAINT FK_ProvProd_Producto FOREIGN KEY (id_producto) REFERENCES Producto(id_producto)
 );
-GO
 
+-- 5. Tablas Transaccionales
 CREATE TABLE Boleta (
-    id_venta VARCHAR(20) PRIMARY KEY,
-    rut_cliente VARCHAR(10) NOT NULL,
+    id_venta BIGINT PRIMARY KEY,         
+    rut_cliente NCHAR(10) NOT NULL, 
     fecha_venta DATE NOT NULL,
     descuento_venta DECIMAL(5, 2) NOT NULL DEFAULT 0,
     monto_final DECIMAL(10, 2) NOT NULL,
@@ -87,8 +87,8 @@ CREATE TABLE Boleta (
 );
 
 CREATE TABLE Detalle_boleta (
-    correlativo_detalle VARCHAR(20) PRIMARY KEY,
-    id_venta VARCHAR(20) NOT NULL,
+    correlativo_detalle BIGINT PRIMARY KEY, 
+    id_venta BIGINT NOT NULL,
     id_producto INT NOT NULL,
     precio_venta DECIMAL(10, 2) NOT NULL,
     cantidad_producto INT NOT NULL,
@@ -98,4 +98,3 @@ CREATE TABLE Detalle_boleta (
     CONSTRAINT CHK_Cantidad_Positiva CHECK (cantidad_producto > 0)
 );
 GO
-
